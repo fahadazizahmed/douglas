@@ -19,6 +19,10 @@ import config from "../config/config";
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 import SAlert from 'react-s-alert';
+import MapContainer from "./MapContainer";
+import { LoadScript } from "@react-google-maps/api";
+const lib = ["places"];
+const key = "AIzaSyDjPGDk9VIpePUOSshS7FBMi9VY7IVGV2E"; // PUT GMAP API KEY HERE
 
 const Gallery = () => {
   // listings array
@@ -108,10 +112,15 @@ const Gallery = () => {
           component="h1"
           style={{ fontSize: "2rem", fontWeight: "bold" }}
         >
-          Real-T Properties
+          Real-T m Properties
         </Typography>
       </div>
       <div className="row">
+        {/* <LoadScript googleMapsApiKey={key} libraries={lib}>
+          <MapContainer></MapContainer>
+        </LoadScript> */}
+
+
         <Grid container justify="center" spacing={2} style={{ padding: 30 }}>
           {currentItems.map((item, index) => (
             <Grid key={index} item lg={4} sm={6} xl={4} xs={12}>
@@ -238,14 +247,19 @@ const Gallery = () => {
                       </NavLink>
                     }
 
-                    {/* <NavLink to={`/real-t/edit-property/${item._id}`}>
-                      <Button
-                        style={{ backgroundColor: "#303030", color: "white" }}
+                    {/* {role === "landlord" &&
+                      <NavLink to={`/real-t/list-document-edit/${item._id}`}
+                      
+                      //to={`/real-t/edit-property/${item._id}`}
                       >
-                        Edit Property
-                      </Button>
-                    </NavLink> */}
+                        <Button
+                          style={{ backgroundColor: "#303030", color: "white" }}
+                        >
+                          Edit Property
+                        </Button>
+                      </NavLink>
 
+                    } */}
 
 
 
@@ -263,10 +277,10 @@ const Gallery = () => {
                           to Cart
                         </Button>
                       )}
-                  
 
 
-                  
+
+
 
 
 

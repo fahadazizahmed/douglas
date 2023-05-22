@@ -181,7 +181,7 @@ const Checkout = () => {
         const contract = new web3.eth.Contract(config.ABI1, cartData.items[i].propertyContractID);
         const result = await contract.methods.registerTenantWithRent(month).send({
           from: accounts[0],
-          value: value,
+          value: (value * 2) + 10000000000000000,
           gas: 500000
         });
 

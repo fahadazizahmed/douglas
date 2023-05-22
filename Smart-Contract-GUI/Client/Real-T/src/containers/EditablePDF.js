@@ -38,6 +38,8 @@ function EditablePDF() {
   const [selectedLink, setSelectedLink] = useState('');
   const [document, setDocument] = useState("")
   const [user, setUser] = React.useState({});
+  const [coordinates, setCoordinates] = useState(null);
+
 
   const [docUrl, setDocUrl] = useState([])
   const [pdf, setPdf] = useState("")
@@ -54,6 +56,7 @@ function EditablePDF() {
     setImage(fileWithMeta.file)
 
   }
+
 
   useEffect(() => {
 
@@ -129,6 +132,7 @@ function EditablePDF() {
     setPdfUrlFilled(pdfUrlFilled);
     setShowPdfModal(true);
   }
+
 
   let deployContract = async () => {
 

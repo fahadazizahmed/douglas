@@ -30,7 +30,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 // app.use(fileUpload());
 
 app.use(cors({
-  origin: ['https://bitbrowze.com', 'http://localhost:3000', 'http://localhost:3001'],
+  origin: ['https://bitbrowze.com', 'http://localhost:3000', 'http://localhost:3001','http://localhost:5001'],
   credentials: true,
   optionSuccessStatus: 200,
 }));

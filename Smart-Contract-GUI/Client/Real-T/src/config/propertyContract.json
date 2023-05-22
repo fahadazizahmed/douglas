@@ -145,6 +145,21 @@
 		"type": "event"
 	},
 	{
+		"constant": true,
+		"inputs": [],
+		"name": "arbitrator",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"constant": false,
 		"inputs": [
 			{
@@ -260,6 +275,71 @@
 		],
 		"payable": true,
 		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "property",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "addr",
+				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "rented",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "rentInterval",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "rentAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "securityDeposit",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tenantWarning",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "warningLimit",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "dueDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "tenant",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{

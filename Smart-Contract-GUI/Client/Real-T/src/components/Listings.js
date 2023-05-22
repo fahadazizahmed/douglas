@@ -31,19 +31,7 @@ const Listings = () => {
   }, []);
 
   let makeTransaction = async (newData) => {
-
-
-
-
-
-
-
-
-
-
-  
-
-    const web3 = new Web3(window.ethereum);
+const web3 = new Web3(window.ethereum);
     // Request user permission to connect to Metamask
     await window.ethereum.enable();
     let accounts = await web3.eth.getAccounts()

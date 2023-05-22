@@ -137,4 +137,16 @@ router.delete('/:id', authenticated, async (req, res, next) => {
     }
 });
 
+
+// Get a specific listing
+router.get('/edit/:id',authenticated, async (req, res, next) => {
+    console.log("ffff",req.params)
+    try {
+        const listing = await listingModel.findOne({_id: req.params.id});
+        console.log("Listying")
+        res.send(listing);
+    } catch (err) {
+        next("Internal server error: Couldn't get listing");
+    }
+});
 module.exports = router

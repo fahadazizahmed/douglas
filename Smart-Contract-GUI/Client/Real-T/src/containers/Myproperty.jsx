@@ -19,6 +19,9 @@ import config from "../config/config";
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 import SAlert from 'react-s-alert';
+import MapContainer from "./MapContainer";
+
+import { Map, GoogleApiWrapper, StreetViewPanorama } from 'google-maps-react';
 const Web3 = require('web3');
 const Myproperty = () => {
   // listings array
@@ -168,7 +171,7 @@ const Myproperty = () => {
       setIsDisable("")
       setIsLoading("")
       console.log("Errr", e)
-      alert("Facing some issue to pay rentƒ")
+      alert("You rent is already paid for this month")
 
 
     }
@@ -193,6 +196,7 @@ const Myproperty = () => {
         </Typography>
       </div>
       <div className="row">
+      
         <Grid container justify="center" spacing={2} style={{ padding: 30 }}>
           {currentItems.map((item, index) => (
             <Grid key={index} item lg={4} sm={6} xl={4} xs={12}>

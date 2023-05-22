@@ -170,6 +170,116 @@ router.post('/', authenticated, async (req, res, next) => {
 
 
 
+router.post('/edit', authenticated, async (req, res, next) => {
+    console.log("authenticated", req.user)
+    multer1.uploadFile1.single('image')(req, res, (err) => {
+        if (err) {
+            console.log("ress", err)
+            res.send({ message: "File suze is to large.Upload some other picture" })
+        }
+        else { next() }
+    })
+}, async (req, res, next) => {
+    console.log("My Body", req.body)
+
+    try {
+        let find = await userModel.findOne({ _id: req.user })
+        // Load the PDF file
+        const file = await fs.readFile(`./uploads/contractPdf/${req.body.docs}`);
+
+        // Create a new PDF document object
+        const pdfDoc = await PDFDocument.load(file);
+
+        // Get the first page of the document
+        const page = pdfDoc.getPages()[0];
+
+        // Draw some text on the page
+        page.drawText(find.firstName, {
+            x: 160,
+            y: 643,
+            size: 12,
+
+        });
+
+        page.drawText(req.body.price + " Ether", {
+            x: 457,
+            y: 495,
+            size: 12,
+
+        });
+
+        page.drawText(req.body.address, {
+            x: 290,
+            y: 525,
+            size: 12,
+
+        });
+
+        // Save the modified document
+        const pdfBytes = await pdfDoc.save();
+
+        // Write the modified file to disk
+        if (!fs1.existsSync(`./uploads/agreement/${req.user}`)) {
+            await mkdirp.sync(`./uploads/agreement/${req.user}`)
+        }
+        let pdfFileName = `${req.user}/modified-${Date.now()}.pdf`
+        await fs.writeFile(`./uploads/agreement/${pdfFileName}`, pdfBytes);
+        const image = `${req.user}/${req.file.filename}`
+
+        console.log("My Body", req.body)
+        const { name, description, price, zillowLink, propertyHash, address, imageLink, id } = req.body;
+        console.log("Reeee",req.body)
+        if (imageLink === "") {
+
+        }
+
+        // const listingId = id; // Replace with the actual listing ID
+
+        // const filter = { _id: listingId }; // Filter to find the listing by its ID
+
+        // const update = {
+        //     $set: {
+        //         name,
+        //         image,
+        //         description,
+        //         price,
+        //         owner: req.user,
+        //         available: true,
+        //         sold: false,
+        //         address,
+        //         zillowLink,
+        //         propertyContractID: propertyHash,
+        //         agreementDocs: pdfFileName,
+        //     },
+        // };
+
+        // const options = { new: true }; // Set `new` option to return the updated listing
+
+        // const updatedListing = await listingModel.findOneAndUpdate(filter, update, options);
+
+
+      
+        // const insertInWPresult = await axios.get(process.env.WP_ADD_PRODUCT, {
+        //     params: {
+        //         product_id: listing._id.toString().replace(/^"(.*)"$/, '$1'),
+        //         token_name: name,
+        //         original_price: price,
+        //         product_author: req.user,
+        //         product_img: image,
+        //         category: "Property",
+        //     }
+        // });
+       // console.log('WP: ', insertInWPresult);
+        res.send("updated")
+    } catch (e) {
+        console.log(e);
+        next("Erorr while adding a listing");
+    }
+});
+
+
+
+
 
 
 
@@ -395,6 +505,18 @@ router.post('/user/updateRent', authenticated, async (req, res, next) => {
     catch (err) {
         console.log("Errro", err)
         next("Internal server error: Couldn't get available listings");
+    }
+});
+
+// Get a specific listing
+router.get('/edit/:id', authenticated, async (req, res, next) => {
+    console.log("ffff", req.params)
+    try {
+        const listing = await listingModel.findOne({ _id: req.params.id });
+        console.log("Listying")
+        res.send(listing);
+    } catch (err) {
+        next("Internal server error: Couldn't get listing");
     }
 });
 

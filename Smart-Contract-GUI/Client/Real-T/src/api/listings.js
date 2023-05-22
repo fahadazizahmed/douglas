@@ -26,6 +26,14 @@ export const getUserListings = (username) => {
 export const addListing = (data) => {
     return axios.post(`/listing`, data, { withCredentials: true });
 }
+export const editListing = (data) => {
+    return axios.post(`/edit-listing`, data, { withCredentials: true });
+}
+export const getUserForUpdate = (id) => {
+   
+    return axios.get(`/listing/edit/${id}`, { withCredentials: true });
+}
+
 
 export const updateListing = (itemId, data) => {
     return axios.patch(`/listing/${itemId}`, data, { withCredentials: true });

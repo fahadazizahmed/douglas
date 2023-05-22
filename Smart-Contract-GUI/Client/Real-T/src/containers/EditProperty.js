@@ -6,22 +6,26 @@ import config from "../config/config";
 import { Link } from "react-router-dom";
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
-import { addListing, addPdf } from '../api/listings';
+import { editListing, addPdf } from '../api/listings';
 import { PDFDocument, StandardFonts } from 'pdf-lib';
 import Web3 from 'web3';
 import propertyContract from "../config/propertyContract.json"
+import { getProfile } from "../api/user";
 import PdfModal from './PdfModal';
 import Modal from 'react-modal';
 import SAlert from 'react-s-alert';
 import 'react-s-alert/dist/s-alert-default.css';
+import { getUserForUpdate } from '../api/listings';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
-import Navbar from "../components/NavBar";
-import { useParams } from "react-router-dom";
 
+import Navbar from "../components/NavBar";
+
+import { useLocation, useHistory, useParams } from 'react-router-dom';
 
 
 
 function EditProperty() {
+  const history = useHistory();
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
   const [isDisable, setIsDisable] = useState(false)
@@ -34,7 +38,9 @@ function EditProperty() {
   const [image, setImage] = useState(null);
   const [selectedLink, setSelectedLink] = useState('');
   const [document, setDocument] = useState("")
-
+  const [user, setUser] = React.useState({});
+  const [coordinates, setCoordinates] = useState(null);
+  const [imageLink, setImageLink] = useState("");
 
   const [docUrl, setDocUrl] = useState([])
   const [pdf, setPdf] = useState("")
@@ -42,88 +48,63 @@ function EditProperty() {
 
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [pdfUrlFilled, setPdfUrlFilled] = useState('');
+  const location = useLocation();
+  const { id } = useParams();
+  const documentReceoive = location.state.doc;
 
 
-
-  // useEffect(() => {
-  //   const { id } = useParams();
-  //   alert(id)
-
-  // }, [])
-
-
-  const handleChange = (event) => {
-    setDocument(event.target.value)
-  };
-
-  const handleOpenLink = () => {
-    window.open(`${config.backendURL}/doc/${document}`, '_blank');
-
-  };
 
   const handleChangeStatus = async (fileWithMeta) => {
+    setImageLink("")
     setImage(fileWithMeta.file)
 
   }
 
+  useEffect(() => {
 
 
+    const getUserForUpdates = async () => {
+      try {
+        const { data } = await getUserForUpdate(id)
+        setName(data.name)
+        setAddress(data.address)
+        setPrice(data.price)
+        setZallowLink(data.zillowLink)
+        setDescription(data.description)
+        setImageLink(data.image)
+        console.log("data", data)
+
+      }
+      catch (e) {
+        console.log("eeee", e)
+        alert("Facing some issue to get data")
+      }
+
+
+    }
+    getUserForUpdates()
+    // await addListing(body)
+
+
+  }, [])
 
 
 
   useEffect(() => {
-    let getPdfDocumenta = async () => {
 
-      let doc = await axios.get(`${config.backendURL}/api/real-t/users/list_document`)
-      const docList = doc.data.map(doc => ({
-        name: doc, // Remove .pdf extension
-        url: `${config.pdfUrl}/${doc}` // Replace with your own URL
-      }));
-      setDocUrl(docList)
+    getProfile().then((res) => setUser(res.data));
+
+    let getPdfDocumenta = async () => {
+      setDocUrl([...docUrl, { name: documentReceoive, url: `${config.backendURL}/doc/${documentReceoive}` }]);
 
     }
     getPdfDocumenta()
 
   }, [])
 
-
-
-  // let generateNew = async () => {
-  //   const pdfUrl = 'http://localhost:2700/doc/docA.pdf';
-  //   const pdfBytes = await fetch(pdfUrl).then((res) => res.arrayBuffer());
-
-  //   // Create a new PDF document
-  //   const pdfDoc = await PDFDocument.load(pdfBytes);
-
-  //   // Get the first page of the PDF document
-  //   const page = pdfDoc.getPage(0);
-
-  //   // Get the font to use for the form fields
-  //   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-  //   // Set the price form field
-  //   const price = 100;
-  //   page.drawText("$" + price, {
-  //     x: 525,
-  //     y: 497,
-  //     size: 9,
-  //     font,
-  //   });
-
-  //   // Save the filled-out PDF document as a new file
-  //   const pdfBytesFilled = await pdfDoc.save();
-  //   const pdfUrlFilled = URL.createObjectURL(new Blob([pdfBytesFilled], { type: 'application/pdf' }));
-  //   setPdfUrlFilled(pdfUrlFilled);
-  //   setShowPdfModal(true);
-  //   console.log("pdfBytesFilled",pdfBytesFilled)
-
-  //   const formData = new FormData();
-  //   formData.append('pdf', new Blob([pdfBytesFilled], { type: 'application/pdf' }), 'filled.pdf');
-  //   await addPdf(formData)
-  // }
-
   let generatePDF = async (doc) => {
-    const pdfUrl = `${config.backendURL}/doc/${doc}`
+    const pdfUrl = `${config.backendURL}/doc/${documentReceoive}`
+
     const pdfBytes = await fetch(pdfUrl).then((res) => res.arrayBuffer());
 
     // Create a new PDF document
@@ -137,12 +118,44 @@ function EditProperty() {
 
     // Set the name, address, and description form fields
 
-    page.drawText("$" + price, {
-      x: 525,
-      y: 497,
-      size: 9,
+    page.drawText(user.firstName, {
+      x: 160,
+      y: 643,
+      size: 12,
       font,
     });
+
+    // page.drawText("Haris", {
+    //   x: 160,
+    //   y: 600,
+    //   size: 12,
+    //   font,
+    // });
+
+    // const currentDate = new Date();
+
+
+    // page.drawText(currentDate.toLocaleDateString(), {
+    //   x: 144,
+    //   y: 468,
+    //   size: 12,
+    //   font,
+    // });
+
+    page.drawText(price + " Ether", {
+      x: 459,
+      y: 495,
+      size: 12,
+      font,
+    });
+
+    page.drawText(addr, {
+      x: 290,
+      y: 525,
+      size: 12,
+      font,
+    });
+
 
 
     // Save the filled-out PDF document as a new file
@@ -150,18 +163,11 @@ function EditProperty() {
     const pdfUrlFilled = URL.createObjectURL(new Blob([pdfBytesFilled], { type: 'application/pdf' }));
     setPdfUrlFilled(pdfUrlFilled);
     setShowPdfModal(true);
-
-    // const formData = new FormData();
-    // formData.append('pdf', new Blob([pdfBytesFilled], { type: 'application/pdf' }), 'filled.pdf');
-    // await addPdf(formData)
-
-    //const pdfUrlFilled = URL.createObjectURL(new Blob([pdfBytesFilled]));
-    // window.open(pdfUrlFilled);
-
-
   }
 
+
   let deployContract = async () => {
+    alert("hoit iakaiaia")
 
     // Connect to MetaMask
     const web3 = new Web3(window.ethereum);
@@ -169,54 +175,50 @@ function EditProperty() {
     // Request user permission to connect to Metamask
     await window.ethereum.enable();
     let accounts = await web3.eth.getAccounts()
-    console.log("accounts", accounts)
     setIsLoading(true)
     setIsDisable(true)
-
+    alert("abc")
     // Set up the contract instance
     const myContract = new web3.eth.Contract(propertyContract);
-
-
-
     // Deploy the contract
     myContract.deploy({
       data: config.contractByteCode,
-      arguments: [name, addr, 30, 12, 1, config.nftAddress] // Add any constructor arguments here
+      arguments: [name, addr, 30, web3.utils.toWei(price, 'ether'), 1, config.nftAddress] // Add any constructor arguments here
     })
-
-
-      // .send({
-      //   from: accounts[0], // Set the deploying account
-      //   gas: 10000, // Set the gas limit 8 lakh
-      //   gasPrice: web3.utils.toWei('5', 'gwei') // Set the gas price 
-      // })
-
 
       .send({
         from: accounts[0],
-        value: web3.utils.toWei('0.1', 'ether'), // Set the value to 0.1 ether
+        value: web3.utils.toWei('0.01', 'ether'), // Set the value to 0.1 ether
         gas: web3.utils.toHex(8000000), // Increase the gas limit
         gasPrice: web3.utils.toWei('5', 'gwei') // web3.utils.toHex(web3.utils.toWei('5', 'gwei')), // Increase the gas price
       })
-
       .on('transactionHash', async function (hash) {
+      })
+      .on('receipt', async function (receipt) {
+        console.log('Contract address:', receipt.contractAddress);
+
 
         try {
-
-
           const body = new FormData()
           body.append('image', image)
+          body.append('id', id)
+          body.append("imageLink", imageLink)
           body.append('name', name)
           body.append('description', description)
           body.append("price", price)
-          body.append('docs', document)
+          body.append('docs', documentReceoive)
           body.append("zillowLink", zallowLink)
-          body.append("propertyHash", hash)
-          await addListing(body)
+          body.append("address", addr)
+          body.append("propertyHash", receipt.contractAddress)
+          await editListing(body)
           setIsLoading(false)
           setIsDisable(false)
           setShowPdfModal(false)
-          SAlert.success('Congratulations! The property details have been added successfully.');
+          SAlert.success('Congratulations! The property details have been edited successfully.');
+          setTimeout(() => {
+            history.push("/real-t/properties")
+          }, 1000)
+
 
         }
         catch (e) {
@@ -226,12 +228,6 @@ function EditProperty() {
 
         }
         return
-
-      })
-      .on('receipt', function (receipt) {
-        setIsLoading(false)
-        setIsDisable(false)
-        console.log('Contract address:', receipt.contractAddress);
       })
       .on('error', function (error) {
         setIsLoading(false)
@@ -250,17 +246,12 @@ function EditProperty() {
     catch (e) {
 
     }
-
-
-
-
-
-
   }
 
 
   let submitProperty = async (e) => {
     e.preventDefault()
+
 
     if (name === '' || name === null) {
       setIsError(true)
@@ -289,13 +280,6 @@ function EditProperty() {
       setMessage("Description is required")
       return
     }
-
-    if (document === '' || document === null || document === undefined) {
-      setIsError(true)
-      setMessage("Please select the agreement document")
-      return
-    }
-
     if (image === '' || image === null || image === undefined || image === []) {
       setIsError(true)
       setMessage("Please select the property image")
@@ -318,7 +302,16 @@ function EditProperty() {
 
     <div className="limiter">
       <Navbar />
+      {console.log("LRLRLRLRL", user)}
+
       <div className="container-login100">
+        {/* 
+        <div>
+          <iframe src={`${config.pdfUrl}/${documentReceoive}`} width="100%" height="500px"></iframe>
+        </div> */}
+
+
+
         <div className="wrap-login100">
           <form className="login100-form validate-form">
             <span className="login100-form-title p-b-43 mb-4">
@@ -410,14 +403,26 @@ function EditProperty() {
               />
               <span className="focus-input100" />
 
+              <div style={{ marginTop: 12 }}>
+                <iframe
+                  src={`${config.backendURL}/doc/${documentReceoive}`}
+
+                  // src="https://www.africau.edu/images/default/sample.pdf"
+
+                  width="100%" height="200px"></iframe>
+              </div>
+
 
 
             </div>
 
 
+            {
+              imageLink && <img style={{ height: 200, width: 200 }} src={`${config.backendURL}/api/${imageLink}`} />
+            }
 
 
-            <div style={{ margin: 0, padding: 0 }} className="container mb-4">
+            {/* <div style={{ margin: 0, padding: 0 }} className="container mb-4">
               <select value={document} onChange={handleChange} className="select">
                 <option value="">Select agreement document</option>
                 {docUrl.map((link) => (
@@ -429,7 +434,7 @@ function EditProperty() {
               <button type="button" onClick={handleOpenLink} disabled={!document} className="button">
                 Open Link
               </button>
-            </div>
+            </div> */}
 
             <Dropzone
 
@@ -511,11 +516,12 @@ function EditProperty() {
 
             </div>
           </form>
-          <div
+          {/* <div
             className="login100-more"
             style={{ backgroundImage: 'url("assets/img/jmm_4377.jpg")' }}
-          ></div>
+          ></div> */}
         </div>
+
       </div>
       {/* <Modal isOpen={showPdfModal} onRequestClose={() => setShowPdfModal(false)}>
         <iframe src={pdfUrlFilled} width="100%" height="100%" />

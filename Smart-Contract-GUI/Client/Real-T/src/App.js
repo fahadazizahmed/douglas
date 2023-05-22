@@ -24,6 +24,7 @@ import ListDocuments from "./containers/ListDocuments";
 import EditablePDF from "./containers/EditablePDF";
 import EditProperty from "./containers/EditProperty";
 import Myproperty from "./containers/Myproperty";
+import ListDocumentEdit from "./containers/ListDocumentEdit";
 
 
 function App() {
@@ -47,8 +48,9 @@ function App() {
           <Route path="/real-t/contactus" component={Admin} />
           <Route path="/real-t/landlord" component={Landlord} />
           <Route path="/real-t/list-document" component={ListDocuments} />
+          <Route path="/real-t/list-document-edit/:id" component={ListDocumentEdit} />
           <Route path="/real-t/add-property" component={EditablePDF} />
-          <Route path="/real-t/edit-property" component={EditProperty} />
+          <Route path="/real-t/edit-property/:id" component={EditProperty} />
           <Route path="/real-t/assignments/:id" component={Assignment} />
           <Route path="/real-t/:username" component={PersonalGalery} />
 
