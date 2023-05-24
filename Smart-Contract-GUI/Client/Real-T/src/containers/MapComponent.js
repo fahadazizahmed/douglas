@@ -10,7 +10,7 @@ import { LoadScript } from "@react-google-maps/api";
 import config from "../config/config";
 const lib = ["places"];
 
-const I = () => {
+const MapComponent = () => {
 
     // const { lat, long } = useParams();
     const location = useLocation();
@@ -89,4 +89,4 @@ const useStyles = makeStyles({
     },
 });
 
-export default I;
+export default MapComponent;

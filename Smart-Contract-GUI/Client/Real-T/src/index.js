@@ -8,7 +8,8 @@ const axios = require('axios');
 // axios.defaults.baseURL = `https://bitbrowze.com/api/real-t`;
 // axios.defaults.baseURL = 'http://localhost:5000/real-t';
 // axios.defaults.baseURL = 'http://localhost:5000/real-t';
-axios.defaults.baseURL = 'http://localhost:2700/api/real-t';
+//axios.defaults.baseURL = 'http://localhost:2700/api/real-t';
+axios.defaults.baseURL = 'https://realt.iproprietor.net/api/real-t';
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,7 +1,7 @@
 const config = {
 
-    backendURL: "http://localhost:2700",
-  // backendURL:"https://realt.iproprietor.net",
+   // backendURL: "http://localhost:2700",
+   backendURL:"https://realt.iproprietor.net",
    frontendUrl: "http://localhost:3000/",
    contractAddress: "0x293b340F08E761637312f96D93526B85B07bCF22",
    rpcUrl: "https://rpc.ankr.com/polygon_mumbai/",
