@@ -25,6 +25,7 @@ import EditablePDF from "./containers/EditablePDF";
 import EditProperty from "./containers/EditProperty";
 import Myproperty from "./containers/Myproperty";
 import ListDocumentEdit from "./containers/ListDocumentEdit";
+import Map from "./containers/Map";
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route exact path="/real-t" component={Main} />
           <Route path="/real-t/home" component={Home} />
           <Route path="/real-t/admin" component={Admin} />
+          <Route path="/real-t/map" component={Map} />
           <ProtectedRoute path="/real-t/profile" component={Profile} />
           <Route path="/real-t/properties" component={Gallery} />
           <Route path="/real-t/my-properties" component={Myproperty} />

@@ -247,19 +247,24 @@ const Gallery = () => {
                       </NavLink>
                     }
 
-                    {/* {role === "landlord" &&
-                      <NavLink to={`/real-t/list-document-edit/${item._id}`}
-                      
-                      //to={`/real-t/edit-property/${item._id}`}
-                      >
-                        <Button
-                          style={{ backgroundColor: "#303030", color: "white" }}
-                        >
-                          Edit Property
-                        </Button>
-                      </NavLink>
+                    {
+                      item.latitude === undefined ? null : role === "landlord" || role === "tenant" && (item.latitude && item.longitude) ?
+                        <NavLink to={`/real-t/map?lat=${item.latitude}&&long=${item.longitude}&&name=${item.name}`}
 
-                    } */}
+                        //to={`/real-t/edit-property/${item._id}`}
+                        >
+                          <Button
+                            style={{ backgroundColor: "#303030", color: "white" }}
+                          >
+                            View On Map
+                          </Button>
+                        </NavLink> : null
+
+
+
+                    }
+
+
 
 
 

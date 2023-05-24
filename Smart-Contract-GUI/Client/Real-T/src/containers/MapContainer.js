@@ -2,15 +2,16 @@
 import React from "react";
 import { GoogleMap, StreetViewPanorama } from "@react-google-maps/api";
 
-function MapContainer() {
+function MapContainer(props) {
   const containerStyle = {
-    height: "400px",
-    width: "800px"
+    height: "800px",
+    width: "100%"
   };
+  console.log(" props.latitude", props.latitude)
 
   const center = {
-    lat: 54.364442,
-    lng: 18.643173
+    lat:parseFloat(props.latitude),// 31.4645686,
+    lng:parseFloat(props.longitude)// 74.2719769
   };
   return (
     <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
@@ -20,6 +21,7 @@ function MapContainer() {
         position={center}
         visible={true}
       />
+     
     </GoogleMap>
   );
 }

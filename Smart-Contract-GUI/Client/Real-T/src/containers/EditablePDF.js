@@ -39,6 +39,8 @@ function EditablePDF() {
   const [document, setDocument] = useState("")
   const [user, setUser] = React.useState({});
   const [coordinates, setCoordinates] = useState(null);
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
 
 
   const [docUrl, setDocUrl] = useState([])
@@ -133,8 +135,53 @@ function EditablePDF() {
     setShowPdfModal(true);
   }
 
+  useEffect(() => {
+    console.log("origin USDB_TO_USB", coordinates)
+
+  }, [coordinates])
+
 
   let deployContract = async () => {
+    let latitude
+    let longitude
+
+    const apiUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
+    const apiKey = config.googlsApiKey; // Replace with your actual API key
+
+    try {
+      let response = await axios.get(apiUrl, {
+        params: {
+          address: addr,
+          key: apiKey,
+        },
+      })
+      const results = response.data.results;
+      if (results.length > 0) {
+        const location = results[0].geometry.location;
+        latitude = location.lat;
+        longitude = location.lng;
+        setCoordinates({ latitude, longitude });
+        setLat(latitude)
+        setLng(longitude)
+      } else {
+        setCoordinates(null);
+      }
+
+    }
+    catch (e) {
+
+    }
+    if (latitude === "" || latitude === undefined || latitude === null) {
+      alert("Please address from the google map so that we can show teenat clear image and location of your property")
+      return
+    }
+    if (longitude === "" || longitude === undefined || longitude === null) {
+      alert("Please address from the google map so that we can show teenat clear image and location of your property")
+      return
+    }
+
+
+
 
     // Connect to MetaMask
     const web3 = new Web3(window.ethereum);
@@ -175,6 +222,9 @@ function EditablePDF() {
           body.append("zillowLink", zallowLink)
           body.append("address", addr)
           body.append("propertyHash", receipt.contractAddress)
+          body.append("coordniates", { latitude: latitude, longitude: longitude })
+          body.append("lat", latitude)
+          body.append("lng", longitude)
           await addListing(body)
           setIsLoading(false)
           setIsDisable(false)

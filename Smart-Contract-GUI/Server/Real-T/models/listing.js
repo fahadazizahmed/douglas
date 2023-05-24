@@ -13,6 +13,10 @@ const ListingSchema = new mongoose.Schema({
     zillowLink: { type: String, required: false },
     propertyContractID: { type: String, required: false },
     agreementDocs: { type: String, required: false },
+    latitude: { type: String, required: false },
+    longitude: { type: String, required: false },
+
+
 })
 
 const RealT_DB = mongoose.connection.useDb('real-t');

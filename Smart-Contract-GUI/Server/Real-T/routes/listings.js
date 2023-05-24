@@ -134,7 +134,7 @@ router.post('/', authenticated, async (req, res, next) => {
         const image = `${req.user}/${req.file.filename}`
 
         console.log("My Body", req.body)
-        const { name, description, price, zillowLink, propertyHash, address } = req.body;
+        const { name, description, price, zillowLink, propertyHash, address, coordniates, lat, lng } = req.body;
         const listing = await listingModel.create({
             name,
             image,
@@ -146,7 +146,10 @@ router.post('/', authenticated, async (req, res, next) => {
             address,
             zillowLink,
             propertyContractID: propertyHash,
-            agreementDocs: pdfFileName
+            agreementDocs: pdfFileName,
+            // coordniates,
+            latitude: lat,
+            longitude: lng
         });
         await userModel.findByIdAndUpdate(req.user, { $push: { "listings": listing._id } });
         const insertInWPresult = await axios.get(process.env.WP_ADD_PRODUCT, {
@@ -228,7 +231,7 @@ router.post('/edit', authenticated, async (req, res, next) => {
 
         console.log("My Body", req.body)
         const { name, description, price, zillowLink, propertyHash, address, imageLink, id } = req.body;
-        console.log("Reeee",req.body)
+        console.log("Reeee", req.body)
         if (imageLink === "") {
 
         }
@@ -258,7 +261,7 @@ router.post('/edit', authenticated, async (req, res, next) => {
         // const updatedListing = await listingModel.findOneAndUpdate(filter, update, options);
 
 
-      
+
         // const insertInWPresult = await axios.get(process.env.WP_ADD_PRODUCT, {
         //     params: {
         //         product_id: listing._id.toString().replace(/^"(.*)"$/, '$1'),
@@ -269,7 +272,7 @@ router.post('/edit', authenticated, async (req, res, next) => {
         //         category: "Property",
         //     }
         // });
-       // console.log('WP: ', insertInWPresult);
+        // console.log('WP: ', insertInWPresult);
         res.send("updated")
     } catch (e) {
         console.log(e);

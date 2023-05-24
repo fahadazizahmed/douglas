@@ -25,6 +25,7 @@ export default function Login(props) {
       password,
       role,
     };
+   
     loginUser(formData)
       .then((res) => {
         if (res.status === 200) {
